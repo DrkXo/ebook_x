@@ -1,6 +1,6 @@
 # EbookX
 
-A cross-platform Flutter package for reading and exporting ebooks. Supports EPUB and PDF formats.
+Flutter package for reading and exporting ebooks. Supports EPUB and PDF formats.
 
 ## Installation
 
@@ -26,11 +26,3 @@ final pdfBytes = await reader.exportToPdf(ebook);
 - **EPUB**: Full support for EPUB 2.0 and 3.0
 - **PDF**: Text extraction from PDF documents (input) and export to PDF (output)
 - **MOBI**: Format detection supported, parsing implementation in progress
-
-## Features
-
-- Automatic format detection
-- Metadata extraction (title, author, description, etc.)
-- Chapter extraction and navigation
-- Configurable parsing options
-- Error handling and logging
