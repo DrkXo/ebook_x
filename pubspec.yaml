@@ -1,0 +1,31 @@
+name: ebook_x
+description: "A Flutter library for reading ebooks including EPUB and PDF formats, and exporting to PDF."
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  archive: ^3.4.10
+  xml: ^6.5.0
+  talker: ^4.4.0
+  path: ^1.9.0
+  equatable: ^2.0.5
+  mime: ^1.0.4
+  http: ^0.13.0
+  path_provider: ^2.0.1
+  dart_pdf_reader: ^2.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.24.0
+  build_runner: ^2.4.7
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  flutter_lints: ^5.0.0
