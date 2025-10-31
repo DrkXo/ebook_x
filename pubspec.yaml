@@ -9,15 +9,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   archive: ^3.4.10
   xml: ^6.5.0
-  talker: ^4.4.0
+  talker: ^5.0.2
   path: ^1.9.0
   equatable: ^2.0.5
-  mime: ^1.0.4
-  http: ^0.13.0
+  mime: ^2.0.0
+  http: ^1.5.0
   path_provider: ^2.0.1
   dart_pdf_reader: ^2.1.0
 
@@ -26,6 +26,6 @@ dev_dependencies:
     sdk: flutter
   test: ^1.24.0
   build_runner: ^2.4.7
-  freezed: ^2.4.6
+  freezed: ^3.2.3
   json_serializable: ^6.7.1
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
