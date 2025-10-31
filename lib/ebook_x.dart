@@ -6,7 +6,7 @@ import 'package:ebook_x/models/ebook/ebook.dart';
 import 'package:ebook_x/models/ebook_x_config.dart';
 import 'package:talker/talker.dart';
 
-import 'src/ebook_parser.dart';
+import 'src/parsers/ebook_parser.dart';
 
 export 'controllers/ebook_x_controller.dart';
 export 'exceptions/ebook_x_exception.dart';
