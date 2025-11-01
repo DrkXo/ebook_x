@@ -106,13 +106,18 @@ class EPubParser extends EbookParser {
     final firstChapter = chapters.first;
     for (final content in firstChapter.content) {
       if (content is HtmlContent) {
-        final doc = _parseXml(content.value, 'chapter html');
-        final img = doc.findAllElements('img').firstOrNull;
-        if (img != null) {
-          final src = img.getAttribute('src');
-          if (src != null && src.startsWith('data:')) {
-            return src;
+        try {
+          final doc = _parseXml(content.value, 'chapter html');
+          final img = doc.findAllElements('img').firstOrNull;
+          if (img != null) {
+            final src = img.getAttribute('src');
+            if (src != null && src.startsWith('data:')) {
+              return src;
+            }
           }
+        } catch (e) {
+          talker?.warning('Failed to parse chapter HTML for cover image: $e');
+          continue;
         }
       }
     }
@@ -344,7 +349,14 @@ class EPubParser extends EbookParser {
 
   /// Extracts content from XHTML as list of ChapterContent, optionally preserving basic formatting and images
   List<ChapterContent> _extractText(String xhtmlContent, String chapterDir) {
-    final doc = _parseXml(xhtmlContent, 'chapter content');
+    XmlDocument? doc;
+    try {
+      doc = _parseXml(xhtmlContent, 'chapter content');
+    } catch (e) {
+      talker?.warning('Failed to parse chapter as XML, falling back to plain text: $e');
+      // Fall back to plain text extraction
+      return [ChapterContent.text(_extractPlainText(xhtmlContent))];
+    }
     if (!config.preserveFormatting) {
       return [ChapterContent.text(doc.rootElement.innerText.trim())];
     }
@@ -602,6 +614,21 @@ class EPubParser extends EbookParser {
         buffer.write('</pre>');
         break;
     }
+  }
+
+  /// Extracts plain text from potentially malformed XHTML by stripping tags
+  String _extractPlainText(String xhtmlContent) {
+    // Simple tag stripping: remove anything between < and >
+    final stripped = xhtmlContent.replaceAll(RegExp(r'<[^>]*>'), '');
+    // Decode common HTML entities
+    return stripped
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&apos;', "'")
+        .replaceAll('&nbsp;', ' ')
+        .trim();
   }
 
   /// Cleans up the extracted text by normalizing whitespace
