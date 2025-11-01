@@ -66,35 +66,38 @@ void main() {
         Chapter(
           id: 'ch1',
           title: 'Chapter 1',
-          content: [ChapterContent.text('A' * 1000)],
+          content: [ChapterContent.text(('A ' * 500).trim())],
           order: 0,
         ),
         Chapter(
           id: 'ch2',
           title: 'Chapter 2',
-          content: [ChapterContent.text('B' * 1500)],
+          content: [ChapterContent.text(('B ' * 750).trim())],
           order: 1,
         ),
-        Chapter(id: 'ch3', title: 'Chapter 3', content: [ChapterContent.text('C' * 500)], order: 2),
+        Chapter(id: 'ch3', title: 'Chapter 3', content: [ChapterContent.text(('C ' * 250).trim())], order: 2),
       ];
       testEbook = Ebook(metadata: metadata, chapters: chapters, format: 'epub');
-      controller = EbookXController(testEbook, charactersPerPage: 1000);
+      controller = EbookXController(testEbook, wordsPerPage: 250);
     });
 
     test('initial state', () {
       expect(controller.currentChapterIndex, 0);
       expect(controller.currentPageIndex, 0);
       expect(controller.totalChapters, 3);
-      expect(controller.totalPagesInChapter, 1); // 1000 chars / 1000 = 1
-      expect(controller.getCurrentPageContent(), 'A' * 1000);
+      expect(controller.totalPagesInChapter, 2); // 500 words / 250 = 2
+      final page = controller.getCurrentPageContent();
+      expect(page.startOffset, 0);
+      expect(page.content.length, 1);
     });
 
     test('nextPage within chapter', () {
-      // Chapter 2 has 1500 chars, so 2 pages
+      // Chapter 2 has 750 words, so 3 pages
       controller.goToChapter(1);
       expect(controller.nextPage(), true);
       expect(controller.currentPageIndex, 1);
-      expect(controller.getCurrentPageContent(), 'B' * 500);
+      final page = controller.getCurrentPageContent();
+      expect(page.startOffset, greaterThan(0));
     });
 
     test('nextPage to next chapter', () {
@@ -133,8 +136,7 @@ void main() {
     });
 
     test('goToChapter out of bounds', () {
-      controller.goToChapter(10);
-      expect(controller.currentChapterIndex, 0); // Should not change
+      expect(() => controller.goToChapter(10), throwsRangeError);
     });
   });
 
