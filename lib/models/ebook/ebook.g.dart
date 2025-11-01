@@ -6,9 +6,9 @@ part of 'ebook.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EbookMetadataImpl _$$EbookMetadataImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$EbookMetadataImpl', json, ($checkedConvert) {
-      final val = _$EbookMetadataImpl(
+_EbookMetadata _$EbookMetadataFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_EbookMetadata', json, ($checkedConvert) {
+      final val = _EbookMetadata(
         title: $checkedConvert('title', (v) => v as String),
         author: $checkedConvert('author', (v) => v as String),
         description: $checkedConvert('description', (v) => v as String?),
@@ -28,7 +28,7 @@ _$EbookMetadataImpl _$$EbookMetadataImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$EbookMetadataImplToJson(_$EbookMetadataImpl instance) =>
+Map<String, dynamic> _$EbookMetadataToJson(_EbookMetadata instance) =>
     <String, dynamic>{
       'title': instance.title,
       'author': instance.author,
@@ -41,9 +41,9 @@ Map<String, dynamic> _$$EbookMetadataImplToJson(_$EbookMetadataImpl instance) =>
       'coverImagePath': instance.coverImagePath,
     };
 
-_$ChapterImpl _$$ChapterImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$ChapterImpl', json, ($checkedConvert) {
-      final val = _$ChapterImpl(
+_Chapter _$ChapterFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_Chapter', json, ($checkedConvert) {
+      final val = _Chapter(
         id: $checkedConvert('id', (v) => v as String),
         title: $checkedConvert('title', (v) => v as String),
         content: $checkedConvert(
@@ -57,41 +57,40 @@ _$ChapterImpl _$$ChapterImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$ChapterImplToJson(_$ChapterImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'title': instance.title,
-      'content': instance.content,
-      'order': instance.order,
-    };
+Map<String, dynamic> _$ChapterToJson(_Chapter instance) => <String, dynamic>{
+  'id': instance.id,
+  'title': instance.title,
+  'content': instance.content,
+  'order': instance.order,
+};
 
-_$TextContentImpl _$$TextContentImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$TextContentImpl', json, ($checkedConvert) {
-      final val = _$TextContentImpl(
+TextContent _$TextContentFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('TextContent', json, ($checkedConvert) {
+      final val = TextContent(
         $checkedConvert('value', (v) => v as String),
         $type: $checkedConvert('runtimeType', (v) => v as String?),
       );
       return val;
     }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
-Map<String, dynamic> _$$TextContentImplToJson(_$TextContentImpl instance) =>
+Map<String, dynamic> _$TextContentToJson(TextContent instance) =>
     <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
 
-_$HtmlContentImpl _$$HtmlContentImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$HtmlContentImpl', json, ($checkedConvert) {
-      final val = _$HtmlContentImpl(
+HtmlContent _$HtmlContentFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('HtmlContent', json, ($checkedConvert) {
+      final val = HtmlContent(
         $checkedConvert('value', (v) => v as String),
         $type: $checkedConvert('runtimeType', (v) => v as String?),
       );
       return val;
     }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
-Map<String, dynamic> _$$HtmlContentImplToJson(_$HtmlContentImpl instance) =>
+Map<String, dynamic> _$HtmlContentToJson(HtmlContent instance) =>
     <String, dynamic>{'value': instance.value, 'runtimeType': instance.$type};
 
-_$ImageContentImpl _$$ImageContentImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$ImageContentImpl', json, ($checkedConvert) {
-      final val = _$ImageContentImpl(
+ImageContent _$ImageContentFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ImageContent', json, ($checkedConvert) {
+      final val = ImageContent(
         $checkedConvert('src', (v) => v as String),
         alt: $checkedConvert('alt', (v) => v as String?),
         title: $checkedConvert('title', (v) => v as String?),
@@ -100,7 +99,7 @@ _$ImageContentImpl _$$ImageContentImplFromJson(Map<String, dynamic> json) =>
       return val;
     }, fieldKeyMap: const {r'$type': 'runtimeType'});
 
-Map<String, dynamic> _$$ImageContentImplToJson(_$ImageContentImpl instance) =>
+Map<String, dynamic> _$ImageContentToJson(ImageContent instance) =>
     <String, dynamic>{
       'src': instance.src,
       'alt': instance.alt,
@@ -108,9 +107,9 @@ Map<String, dynamic> _$$ImageContentImplToJson(_$ImageContentImpl instance) =>
       'runtimeType': instance.$type,
     };
 
-_$ManifestItemImpl _$$ManifestItemImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$ManifestItemImpl', json, ($checkedConvert) {
-      final val = _$ManifestItemImpl(
+_ManifestItem _$ManifestItemFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_ManifestItem', json, ($checkedConvert) {
+      final val = _ManifestItem(
         id: $checkedConvert('id', (v) => v as String),
         href: $checkedConvert('href', (v) => v as String),
         mediaType: $checkedConvert('mediaType', (v) => v as String),
@@ -119,7 +118,7 @@ _$ManifestItemImpl _$$ManifestItemImplFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$$ManifestItemImplToJson(_$ManifestItemImpl instance) =>
+Map<String, dynamic> _$ManifestItemToJson(_ManifestItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'href': instance.href,
@@ -127,14 +126,14 @@ Map<String, dynamic> _$$ManifestItemImplToJson(_$ManifestItemImpl instance) =>
       'title': instance.title,
     };
 
-_$SpineItemImpl _$$SpineItemImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(r'_$SpineItemImpl', json, ($checkedConvert) {
-      final val = _$SpineItemImpl(
+_SpineItem _$SpineItemFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_SpineItem', json, ($checkedConvert) {
+      final val = _SpineItem(
         idref: $checkedConvert('idref', (v) => v as String),
         linear: $checkedConvert('linear', (v) => v as bool? ?? true),
       );
       return val;
     });
 
-Map<String, dynamic> _$$SpineItemImplToJson(_$SpineItemImpl instance) =>
+Map<String, dynamic> _$SpineItemToJson(_SpineItem instance) =>
     <String, dynamic>{'idref': instance.idref, 'linear': instance.linear};

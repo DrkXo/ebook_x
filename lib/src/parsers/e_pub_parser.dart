@@ -60,8 +60,63 @@ class EPubParser extends EbookParser {
 
     final chapters = extractChapters(baseDir, manifest, spine);
 
+    final coverImagePath =
+        _findCoverImagePath(opfDoc, manifest, baseDir) ??
+        _findFirstImageInChapters(chapters);
+
     talker?.info('Parsed ${chapters.length} chapters');
-    return Future.value(Ebook(metadata: metadata, chapters: chapters, format: 'epub'));
+    return Future.value(
+      Ebook(
+        metadata: metadata.copyWith(coverImagePath: coverImagePath),
+        chapters: chapters,
+        format: 'epub',
+      ),
+    );
+  }
+
+  /// Finds the cover image path from EPUB metadata, returns data URI if found
+  String? _findCoverImagePath(
+    XmlDocument opfDoc,
+    Map<String, ManifestItem> manifest,
+    String baseDir,
+  ) {
+    final metadataEl = _findFirst(opfDoc, [metadataElement]);
+    final coverMeta = metadataEl
+        .findElements('meta')
+        .where((e) => e.getAttribute('name') == 'cover')
+        .firstOrNull;
+    final coverId = coverMeta?.getAttribute('content');
+    if (coverId == null) return null;
+    final item = manifest[coverId];
+    if (item == null || !item.mediaType.startsWith('image/')) return null;
+    final fullHref = p.normalize(
+      item.href.startsWith('/') ? item.href : p.join(baseDir, item.href),
+    );
+    final imageFile = archive.findFile(fullHref);
+    if (imageFile == null) return null;
+    final bytes = imageFile.content as Uint8List;
+    final base64Data = base64Encode(bytes);
+    final mimeType = lookupMimeType(fullHref) ?? 'image/jpeg';
+    return 'data:$mimeType;base64,$base64Data';
+  }
+
+  /// Finds the first image in the chapters, returns its data URI if found
+  String? _findFirstImageInChapters(List<Chapter> chapters) {
+    if (chapters.isEmpty) return null;
+    final firstChapter = chapters.first;
+    for (final content in firstChapter.content) {
+      if (content is HtmlContent) {
+        final doc = _parseXml(content.value, 'chapter html');
+        final img = doc.findAllElements('img').firstOrNull;
+        if (img != null) {
+          final src = img.getAttribute('src');
+          if (src != null && src.startsWith('data:')) {
+            return src;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   /// Decodes the ZIP archive from the EPUB bytes
@@ -160,11 +215,16 @@ class EPubParser extends EbookParser {
     final language = languageElement?.innerText ?? 'en';
     final titleElements = metadataEl.findElements('dc:title');
     final XmlElement? titleElement =
-        titleElements.where((e) => e.getAttribute('xml:lang') == language).firstOrNull ??
+        titleElements
+            .where((e) => e.getAttribute('xml:lang') == language)
+            .firstOrNull ??
         titleElements.where((e) => e.attributes.isEmpty).firstOrNull ??
         titleElements.firstOrNull;
     final title = titleElement?.innerText ?? 'Unknown Title';
-    final authors = metadataEl.findElements('dc:creator').map((e) => e.innerText).toList();
+    final authors = metadataEl
+        .findElements('dc:creator')
+        .map((e) => e.innerText)
+        .toList();
     final author = authors.isNotEmpty ? authors.join('; ') : 'Unknown Author';
     final description = metadataEl.findElements('dc:description').isNotEmpty
         ? metadataEl.findElements('dc:description').first.innerText
@@ -338,7 +398,9 @@ class EPubParser extends EbookParser {
       talker?.warning('Img element missing src attribute');
       return;
     }
-    final fullSrc = src.startsWith('/') ? src : p.normalize(p.join(chapterDir, src));
+    final fullSrc = src.startsWith('/')
+        ? src
+        : p.normalize(p.join(chapterDir, src));
     final imageFile = archive.findFile(fullSrc);
     if (imageFile == null) {
       talker?.warning('Image file not found: $fullSrc');
@@ -376,7 +438,9 @@ class EPubParser extends EbookParser {
       talker?.warning('Link element missing href attribute');
       return;
     }
-    final fullHref = href.startsWith('/') ? href : p.normalize(p.join(chapterDir, href));
+    final fullHref = href.startsWith('/')
+        ? href
+        : p.normalize(p.join(chapterDir, href));
     final cssFile = archive.findFile(fullHref);
     if (cssFile == null) {
       talker?.warning('CSS file not found: $fullHref');
@@ -542,6 +606,9 @@ class EPubParser extends EbookParser {
 
   /// Cleans up the extracted text by normalizing whitespace
   String _cleanExtractedText(String text) {
-    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').replaceAll(RegExp(r' {2,}'), ' ').trim();
+    return text
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+        .replaceAll(RegExp(r' {2,}'), ' ')
+        .trim();
   }
 }
