@@ -23,9 +23,7 @@ class EbookX {
   late final Talker? talker;
 
   /// Creates a EbookX instance with optional configuration.
-  EbookX({
-    EbookXConfig? config,
-  }) : config = config ?? const EbookXConfig() {
+  EbookX({EbookXConfig? config}) : config = config ?? const EbookXConfig() {
     talker = this.config.enableLogging ? Talker() : null;
   }
 
@@ -43,7 +41,10 @@ class EbookX {
         throw FileNotFoundException(filePath);
       }
       final bytes = await file.openRead(0, 1024).first; // Read first 1KB
-      final format = detectEbookFormat(filePath, bytes: Uint8List.fromList(bytes));
+      final format = detectEbookFormat(
+        filePath,
+        bytes: Uint8List.fromList(bytes),
+      );
 
       final parser = createParser(format, config, talker);
       await parser.loadFromFile(filePath);
@@ -54,4 +55,6 @@ class EbookX {
       throw ParsingException('Failed to read Ebook: $e');
     }
   }
+
+  List<String> get supportedFormats => EbookParser.supportedFormats;
 }

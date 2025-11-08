@@ -13,8 +13,8 @@ import 'package:talker/talker.dart';
 import 'package:xml/xml.dart';
 
 part 'e_pub_parser.dart';
-part 'pdf_parser.dart';
 part 'mobi_parser.dart';
+part 'pdf_parser.dart';
 
 /// Supported ebook formats
 enum EbookFormat {
@@ -66,7 +66,11 @@ bool _isEpub(Uint8List bytes) {
 }
 
 /// Creates the appropriate parser for the given format
-EbookParser createParser(EbookFormat format, EbookXConfig config, Talker? talker) {
+EbookParser createParser(
+  EbookFormat format,
+  EbookXConfig config,
+  Talker? talker,
+) {
   switch (format) {
     case EbookFormat.epub:
       return EPubParser(config, talker);
@@ -89,4 +93,11 @@ abstract class EbookParser {
 
   /// Parses the loaded ebook and returns an Ebook object
   Future<Ebook> parse();
+
+  // Supported formats
+  static List<String> get supportedFormats => [
+    'epub',
+    'pdf',
+    // 'mobi',
+  ];
 }
